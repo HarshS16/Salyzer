@@ -9,7 +9,10 @@ import Analysis from './pages/Analysis'
 import CallHistory from './pages/CallHistory'
 import Scripts from './pages/Scripts'
 import Team from './pages/Team'
-import Landing from './pages/Landing' // Added Landing import
+import Landing from './pages/Landing'
+import PrivacyPolicy from './pages/PrivacyPolicy' // Added PrivacyPolicy
+import TermsOfService from './pages/TermsOfService' // Added TermsOfService
+import Support from './pages/Support' // Added Support
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -24,6 +27,9 @@ export default function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/support" element={<Support />} />
       
       {/* Protected App Routes */}
       <Route

@@ -149,14 +149,24 @@ export function HeroSection() {
 
 const menuItems = [
     { name: 'Features', href: '#features' },
-    { name: 'Dashboard', href: '/history' },
-    { name: 'Analytics', href: '/' },
+    { name: 'Dashboard', href: '/dashboard' },
     { name: 'Pricing', href: '#pricing' },
+    { name: 'Support', href: '/support' },
 ]
 
 const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
+
+    const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        if (href.startsWith('#')) {
+            e.preventDefault();
+            const element = document.getElementById(href.replace('#', ''));
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -199,6 +209,7 @@ const HeroHeader = () => {
                                     <li key={index}>
                                         <Link
                                             to={item.href}
+                                            onClick={(e) => handleNavClick(e, item.href)}
                                             className="text-surface-400 hover:text-white block duration-300 transition-colors">
                                             <span>{item.name}</span>
                                         </Link>
@@ -217,6 +228,7 @@ const HeroHeader = () => {
                                         <li key={index}>
                                             <Link
                                                 to={item.href}
+                                                onClick={(e) => handleNavClick(e, item.href)}
                                                 className="text-surface-300 hover:text-primary-400 block duration-300">
                                                 <span>{item.name}</span>
                                             </Link>
