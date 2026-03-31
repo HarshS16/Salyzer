@@ -151,7 +151,7 @@ const menuItems = [
     { name: 'Features', href: '#features' },
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Pricing', href: '#pricing' },
-    { name: 'Support', href: '/support' },
+    { name: 'FAQs', href: '#faq' },
 ]
 
 const HeroHeader = () => {
