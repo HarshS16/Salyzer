@@ -110,15 +110,15 @@ Customer: Thanks, bye.`
     // 2. Handle Analysis
     if (hasOpenRouterKey) {
       console.log('🧠 Analyzing transcript with OpenRouter (Parallel Racing)...')
-      const scripts = dbAll('SELECT title, content FROM scripts WHERE userId = ?', [req.user.id])
+      const scripts = await dbAll('SELECT title, content FROM scripts WHERE userId = ?', [req.user.id])
       analysisResult = await analyzeTranscript(transcript, scripts)
     } else {
       console.log('⚠️ No OpenRouter key. Using demo analysis metrics.')
       analysisResult = generateDemoAnalysis(transcript)
     }
 
-    // Updated to dbRun
-    dbRun(
+    // Updated to await dbRun
+    await dbRun(
       'INSERT INTO calls (id, userId, filename, transcript, analysisResult, overallScore) VALUES (?, ?, ?, ?, ?, ?)',
       [
         callId,
@@ -149,10 +149,10 @@ Customer: Thanks, bye.`
 })
 
 // Get all calls for user
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
-    // Updated to dbAll
-    const calls = dbAll('SELECT id, filename, overallScore, createdAt FROM calls WHERE userId = ? ORDER BY createdAt DESC', [req.user.id])
+    // Updated to await dbAll
+    const calls = await dbAll('SELECT id, filename, overallScore, createdAt FROM calls WHERE userId = ? ORDER BY createdAt DESC', [req.user.id])
     res.json(calls)
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch calls' })
@@ -160,23 +160,23 @@ router.get('/', authenticateToken, (req, res) => {
 })
 
 // Get dashboard stats
-router.get('/dashboard', authenticateToken, (req, res) => {
+router.get('/dashboard', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id
 
-    // Updated to dbGet
-    const totalCalls = dbGet('SELECT COUNT(*) as count FROM calls WHERE userId = ?', [userId])
-    const avgScore = dbGet('SELECT AVG(overallScore) as avg FROM calls WHERE userId = ?', [userId])
-    const topScore = dbGet('SELECT MAX(overallScore) as max FROM calls WHERE userId = ?', [userId])
+    // Updated to await dbGet
+    const totalCalls = await dbGet('SELECT COUNT(*) as count FROM calls WHERE userId = ?', [userId])
+    const avgScore = await dbGet('SELECT AVG(overallScore) as avg FROM calls WHERE userId = ?', [userId])
+    const topScore = await dbGet('SELECT MAX(overallScore) as max FROM calls WHERE userId = ?', [userId])
 
-    // Calls this week - updated to dbGet
-    const thisWeek = dbGet(
-      "SELECT COUNT(*) as count FROM calls WHERE userId = ? AND createdAt >= datetime('now', '-7 days')",
+    // Calls this week - updated to await dbGet
+    const thisWeek = await dbGet(
+      "SELECT COUNT(*) as count FROM calls WHERE userId = ? AND createdAt >= CURRENT_TIMESTAMP - interval '7 days'",
       [userId]
     )
 
-    // Updated to dbAll
-    const recentCalls = dbAll(
+    // Updated to await dbAll
+    const recentCalls = await dbAll(
       'SELECT id, filename, overallScore, createdAt FROM calls WHERE userId = ? ORDER BY createdAt DESC LIMIT 5',
       [userId]
     )
@@ -196,10 +196,10 @@ router.get('/dashboard', authenticateToken, (req, res) => {
 })
 
 // Get single call analysis
-router.get('/:id', authenticateToken, (req, res) => {
+router.get('/:id', authenticateToken, async (req, res) => {
   try {
-    // Updated to dbGet
-    const call = dbGet('SELECT * FROM calls WHERE id = ? AND userId = ?', [req.params.id, req.user.id])
+    // Updated to await dbGet
+    const call = await dbGet('SELECT * FROM calls WHERE id = ? AND userId = ?', [req.params.id, req.user.id])
 
     if (!call) {
       return res.status(404).json({ error: 'Call not found' })
@@ -223,13 +223,13 @@ router.get('/:id', authenticateToken, (req, res) => {
 // Re-format existing transcript
 router.post('/:id/reformat', authenticateToken, async (req, res) => {
   try {
-    const call = dbGet('SELECT transcript FROM calls WHERE id = ? AND userId = ?', [req.params.id, req.user.id])
+    const call = await dbGet('SELECT transcript FROM calls WHERE id = ? AND userId = ?', [req.params.id, req.user.id])
     if (!call) return res.status(404).json({ error: 'Call not found' })
-
+ 
     console.log('✨ Re-formatting existing transcript...')
     const structuredTranscript = await formatTranscriptWithAI(call.transcript)
-
-    dbRun('UPDATE calls SET transcript = ? WHERE id = ?', [structuredTranscript, req.params.id])
+ 
+    await dbRun('UPDATE calls SET transcript = ? WHERE id = ?', [structuredTranscript, req.params.id])
     res.json({ transcript: structuredTranscript })
   } catch (err) {
     res.status(500).json({ error: 'Failed to reformat transcript' })
@@ -237,10 +237,10 @@ router.post('/:id/reformat', authenticateToken, async (req, res) => {
 })
 
 // Delete call
-router.delete('/:id', authenticateToken, (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
   try {
-    // Updated to dbRun
-    const result = dbRun('DELETE FROM calls WHERE id = ? AND userId = ?', [req.params.id, req.user.id])
+    // Updated to await dbRun
+    const result = await dbRun('DELETE FROM calls WHERE id = ? AND userId = ?', [req.params.id, req.user.id])
 
     if (result.changes === 0) {
       return res.status(404).json({ error: 'Call not found' })

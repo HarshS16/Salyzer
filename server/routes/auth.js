@@ -15,8 +15,8 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Name, email, and password are required' })
     }
 
-    // Check if user exists - updated to dbGet
-    const existing = dbGet('SELECT id FROM users WHERE email = ?', [email])
+    // Check if user exists - added await
+    const existing = await dbGet('SELECT id FROM users WHERE email = ?', [email])
     if (existing) {
       return res.status(409).json({ error: 'Email already registered' })
     }
@@ -26,8 +26,8 @@ router.post('/register', async (req, res) => {
     const id = uuidv4()
     const userRole = role === 'manager' ? 'manager' : 'agent'
 
-    // Updated to dbRun
-    dbRun(
+    // Updated to await dbRun
+    await dbRun(
       'INSERT INTO users (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)',
       [id, name, email, hashedPassword, userRole]
     )
@@ -51,9 +51,8 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required' })
     }
 
-    // Updated to dbGet
-    const user = dbGet('SELECT * FROM users WHERE email = ?', [email])
-
+    // Updated to await dbGet
+    const user = await dbGet('SELECT * FROM users WHERE email = ?', [email])
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' })
     }

@@ -1,128 +1,110 @@
-import initSqlJs from 'sql.js'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
-import { readFileSync, writeFileSync, existsSync } from 'fs'
+import pg from 'pg'
+import dotenv from 'dotenv'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-const DB_PATH = join(__dirname, 'salyzer.db')
+dotenv.config()
 
-let db = null
-let saveTimer = null
+const { Pool } = pg
+
+// For local dev, you can use local postgres, but DATABASE_URL is best for production
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL?.includes('render.com') || process.env.DATABASE_URL?.includes('neon.tech') 
+    ? { rejectUnauthorized: false } 
+    : false
+})
 
 /**
- * Save database to disk (debounced)
+ * Compatibility Helper: Converts SQLite style queries (?) to Postgres style ($1)
  */
-function saveToDisk() {
-  if (saveTimer) clearTimeout(saveTimer)
-  saveTimer = setTimeout(() => {
-    if (db) {
-      const data = db.export()
-      const buffer = Buffer.from(data)
-      writeFileSync(DB_PATH, buffer)
-    }
-  }, 100)
+function convertQuery(sql) {
+  let count = 0
+  // Convert ? to $1, $2, etc.
+  let pgSql = sql.replace(/\?/g, () => `$${++count}`)
+  
+  // Convert SQLite function calls if present
+  pgSql = pgSql.replace(/datetime\('now'\)/gi, 'CURRENT_TIMESTAMP')
+  pgSql = pgSql.replace(/datetime\('now', '-7 days'\)/gi, "CURRENT_TIMESTAMP - interval '7 days'")
+
+  return pgSql
 }
 
 /**
- * Get the database instance
- */
-export function getDB() {
-  if (!db) throw new Error('Database not initialized. Call initDB() first.')
-  return db
-}
-
-/**
- * Helper: run a query that modifies data (INSERT, UPDATE, DELETE)
- */
-export function dbRun(sql, params = []) {
-  const database = getDB()
-  database.run(sql, params)
-  saveToDisk()
-  return { changes: database.getRowsModified() }
-}
-
-/**
- * Helper: get a single row
- */
-export function dbGet(sql, params = []) {
-  const database = getDB()
-  const stmt = database.prepare(sql)
-  stmt.bind(params)
-  if (stmt.step()) {
-    const row = stmt.getAsObject()
-    stmt.free()
-    return row
-  }
-  stmt.free()
-  return null
-}
-
-/**
- * Helper: get all rows
- */
-export function dbAll(sql, params = []) {
-  const database = getDB()
-  const stmt = database.prepare(sql)
-  stmt.bind(params)
-  const results = []
-  while (stmt.step()) {
-    results.push(stmt.getAsObject())
-  }
-  stmt.free()
-  return results
-}
-
-/**
- * Initialize the database
+ * Initialize Postgres Tables
  */
 export async function initDB() {
-  const SQL = await initSqlJs()
+  try {
+    const client = await pool.connect()
+    console.log('✅ Connected to Cloud Postgres.')
 
-  // Load existing database or create new one
-  if (existsSync(DB_PATH)) {
-    const fileBuffer = readFileSync(DB_PATH)
-    db = new SQL.Database(fileBuffer)
-  } else {
-    db = new SQL.Database()
+    // Create Users Table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id UUID PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        role TEXT DEFAULT 'agent',
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
+    // Create Calls Table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS calls (
+        id UUID PRIMARY KEY,
+        userId UUID REFERENCES users(id),
+        filename TEXT,
+        transcript TEXT,
+        analysisResult TEXT,
+        overallScore INTEGER,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
+    // Create Scripts Table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS scripts (
+        id UUID PRIMARY KEY,
+        userId UUID REFERENCES users(id),
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
+    client.release()
+    console.log('🏛️ Postgres Schema verified and ready.')
+  } catch (err) {
+    console.error('❌ Database Initialization Error:', err.message)
+    throw err
   }
-
-  // Create tables
-  db.run(`
-    CREATE TABLE IF NOT EXISTS users (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      email TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      role TEXT NOT NULL DEFAULT 'agent',
-      createdAt TEXT DEFAULT (datetime('now'))
-    )
-  `)
-
-  db.run(`
-    CREATE TABLE IF NOT EXISTS calls (
-      id TEXT PRIMARY KEY,
-      userId TEXT NOT NULL,
-      filename TEXT NOT NULL,
-      transcript TEXT,
-      analysisResult TEXT,
-      overallScore INTEGER DEFAULT 0,
-      createdAt TEXT DEFAULT (datetime('now')),
-      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-    )
-  `)
-
-  db.run(`
-    CREATE TABLE IF NOT EXISTS scripts (
-      id TEXT PRIMARY KEY,
-      userId TEXT NOT NULL,
-      title TEXT NOT NULL,
-      content TEXT NOT NULL,
-      createdAt TEXT DEFAULT (datetime('now')),
-      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-    )
-  `)
-
-  saveToDisk()
-  console.log('✅ Database initialized')
 }
+
+/**
+ * Executes a query and returns the first row
+ */
+export async function dbGet(sql, params = []) {
+  const pgSql = convertQuery(sql)
+  const res = await pool.query(pgSql, params)
+  return res.rows[0]
+}
+
+/**
+ * Executes a query and returns all rows
+ */
+export async function dbAll(sql, params = []) {
+  const pgSql = convertQuery(sql)
+  const res = await pool.query(pgSql, params)
+  return res.rows
+}
+
+/**
+ * Executes a query (INSERT, UPDATE, DELETE)
+ */
+export async function dbRun(sql, params = []) {
+  const pgSql = convertQuery(sql)
+  const res = await pool.query(pgSql, params)
+  return { changes: res.rowCount }
+}
+
+export default pool

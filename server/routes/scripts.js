@@ -6,10 +6,10 @@ import { authenticateToken } from '../middleware/auth.js'
 const router = Router()
 
 // Get all scripts
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
-    // Updated to dbAll
-    const scripts = dbAll('SELECT id, title, content, createdAt FROM scripts WHERE userId = ? ORDER BY createdAt DESC', [req.user.id])
+    // Updated to await dbAll
+    const scripts = await dbAll('SELECT id, title, content, createdAt FROM scripts WHERE userId = ? ORDER BY createdAt DESC', [req.user.id])
     res.json(scripts)
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch scripts' })
@@ -17,7 +17,7 @@ router.get('/', authenticateToken, (req, res) => {
 })
 
 // Add new script
-router.post('/', authenticateToken, (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   try {
     const { title, content } = req.body
 
@@ -27,14 +27,14 @@ router.post('/', authenticateToken, (req, res) => {
 
     const id = uuidv4()
 
-    // Updated to dbRun
-    dbRun(
+    // Updated to await dbRun
+    await dbRun(
       'INSERT INTO scripts (id, userId, title, content) VALUES (?, ?, ?, ?)',
       [id, req.user.id, title, content]
     )
 
-    // Updated to dbGet
-    const script = dbGet('SELECT * FROM scripts WHERE id = ?', [id])
+    // Updated to await dbGet
+    const script = await dbGet('SELECT * FROM scripts WHERE id = ?', [id])
 
     res.status(201).json(script)
   } catch (err) {
@@ -44,10 +44,10 @@ router.post('/', authenticateToken, (req, res) => {
 })
 
 // Delete script
-router.delete('/:id', authenticateToken, (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
   try {
-    // Updated to dbRun
-    const result = dbRun('DELETE FROM scripts WHERE id = ? AND userId = ?', [req.params.id, req.user.id])
+    // Updated to await dbRun
+    const result = await dbRun('DELETE FROM scripts WHERE id = ? AND userId = ?', [req.params.id, req.user.id])
 
     if (result.changes === 0) {
       return res.status(404).json({ error: 'Script not found' })
