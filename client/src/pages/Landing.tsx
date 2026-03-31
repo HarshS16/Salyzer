@@ -4,7 +4,8 @@ import { TextEffect } from '@/components/ui/text-effect'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { MagicCard } from '@/components/ui/magic-card'
 import { Link } from 'react-router-dom'
-import { PricingSection } from '@/components/ui/pricing' // Added PricingSection import
+import { PricingSection } from '@/components/ui/pricing'
+import { FaqSection } from '@/components/ui/faq' // Added FaqSection import
 import {
   Card,
   CardContent,
@@ -98,6 +99,9 @@ const Landing = () => {
 
       {/* 💰 Pricing Section */}
       <PricingSection />
+
+      {/* ❓ FAQ Section */}
+      <FaqSection />
 
       {/* 📝 Footer Section */}
       <footer className="py-20 border-t border-surface-900 bg-surface-950">
