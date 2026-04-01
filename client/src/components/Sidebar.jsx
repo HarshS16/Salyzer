@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 
 const navItems = [
-  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/upload', icon: Upload, label: 'Upload Call' },
   { to: '/history', icon: History, label: 'Call History' },
   { to: '/scripts', icon: FileText, label: 'Sales Scripts' },

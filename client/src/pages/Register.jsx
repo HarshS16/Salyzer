@@ -25,7 +25,7 @@ export default function Register() {
     try {
       await register(name, email, password, role)
       toast.success('Account created successfully!')
-      navigate('/')
+      navigate('/dashboard')
     } catch (err) {
       toast.error(err.response?.data?.error || 'Registration failed')
     } finally {

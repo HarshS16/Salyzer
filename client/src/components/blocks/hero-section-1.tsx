@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { InfiniteGrid } from '@/components/ui/infinite-grid'
 import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion'
 
 const transitionVariants = {
     item: {
@@ -41,23 +42,28 @@ export function HeroSection() {
                         <div className="mx-auto max-w-7xl px-6">
                             <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
                                 <AnimatedGroup variants={transitionVariants} className="space-y-8">
-                                    <Link
-                                        to="/register"
-                                        className="hover:bg-surface-800 dark:hover:border-t-border bg-surface-900 group mx-auto flex w-fit items-center gap-4 rounded-full border border-surface-700/50 p-1 pl-4 shadow-md shadow-black/5 transition-all duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
-                                        <span className="text-surface-200 text-sm">Now Supporting Groq Whisper-v3</span>
-                                        <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
+                                    <motion.div
+                                        whileHover={{ scale: 1.03 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <Link
+                                            to="/register"
+                                            className="hover:bg-surface-800 hover:shadow-lg hover:shadow-primary-500/10 dark:hover:border-t-border bg-surface-900 group mx-auto flex w-fit items-center gap-4 rounded-full border border-surface-700/50 p-1 pl-4 shadow-md shadow-black/5 transition-all duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
+                                            <span className="text-surface-200 text-sm">Now Supporting Groq Whisper-v3</span>
+                                            <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
 
-                                        <div className="bg-primary-600 text-white group-hover:bg-primary-500 size-6 overflow-hidden rounded-full duration-500">
-                                            <div className="flex w-12 -translate-x-1/2 duration-500 ease-in-out group-hover:translate-x-0">
-                                                <span className="flex size-6">
-                                                    <ArrowRight className="m-auto size-3" />
-                                                </span>
-                                                <span className="flex size-6">
-                                                    <ArrowRight className="m-auto size-3" />
-                                                </span>
+                                            <div className="bg-primary-600 text-white group-hover:bg-primary-500 size-6 overflow-hidden rounded-full duration-500">
+                                                <div className="flex w-12 -translate-x-1/2 duration-500 ease-in-out group-hover:translate-x-0">
+                                                    <span className="flex size-6">
+                                                        <ArrowRight className="m-auto size-3" />
+                                                    </span>
+                                                    <span className="flex size-6">
+                                                        <ArrowRight className="m-auto size-3" />
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Link>
+                                        </Link>
+                                    </motion.div>
 
                                     <h1
                                         className="max-w-4xl mx-auto text-balance text-6xl md:text-7xl lg:mt-16 xl:text-[5.25rem] font-bold tracking-tight text-white leading-[1.1]">
@@ -83,9 +89,16 @@ export function HeroSection() {
                                         item: transitionVariants.item
                                     }}
                                     className="mt-12 flex flex-col items-center justify-center gap-4 md:flex-row">
-                                    <div
+                                    <motion.div
                                         key={1}
-                                        className="bg-primary-500/20 rounded-[14px] border border-primary-500/30 p-0.5">
+                                        className="bg-primary-500/20 rounded-[14px] border border-primary-500/30 p-0.5"
+                                        whileHover={{
+                                            scale: 1.05,
+                                            boxShadow: '0 0 30px rgba(99, 102, 241, 0.3)',
+                                        }}
+                                        whileTap={{ scale: 0.97 }}
+                                        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                                    >
                                         <Button
                                             asChild
                                             size="lg"
@@ -94,17 +107,7 @@ export function HeroSection() {
                                                 <span className="text-nowrap">Start Building Free</span>
                                             </Link>
                                         </Button>
-                                    </div>
-                                    {/* <Button
-                                        key={2}
-                                        asChild
-                                        size="lg"
-                                        variant="outline"
-                                        className="h-10.5 rounded-xl px-8">
-                                        <Link to="/login">
-                                            <span className="text-nowrap">Explore Demo</span>
-                                        </Link>
-                                    </Button> */}
+                                    </motion.div>
                                 </AnimatedGroup>
                             </div>
                         </div>
@@ -121,12 +124,23 @@ export function HeroSection() {
                                 },
                                 item: transitionVariants.item
                             }}>
-                            <div className="relative -mr-56 mt-8 overflow-hidden px-2 sm:mr-0 sm:mt-12 md:mt-20">
+                            <motion.div
+                                className="relative -mr-56 mt-8 overflow-hidden px-2 sm:mr-0 sm:mt-12 md:mt-20"
+                                whileHover={{ scale: 1.01 }}
+                                transition={{ duration: 0.5, ease: 'easeOut' }}
+                            >
                                 <div
                                     aria-hidden
                                     className="bg-gradient-to-b from-transparent via-transparent to-surface-950 absolute inset-0 z-10"
                                 />
-                                <div className="border-surface-700/50 bg-surface-900 relative mx-auto max-w-5xl overflow-hidden rounded-2xl border p-2 shadow-[0_0_50px_rgba(37,99,235,0.1)] ring-1 ring-surface-800">
+                                <motion.div
+                                    className="border-surface-700/50 bg-surface-900 relative mx-auto max-w-5xl overflow-hidden rounded-2xl border p-2 shadow-[0_0_50px_rgba(37,99,235,0.1)] ring-1 ring-surface-800"
+                                    whileHover={{
+                                        boxShadow: '0 0 80px rgba(99, 102, 241, 0.2), 0 0 120px rgba(99, 102, 241, 0.05)',
+                                        borderColor: 'rgba(99, 102, 241, 0.3)',
+                                    }}
+                                    transition={{ duration: 0.6 }}
+                                >
                                     <img
                                         className="bg-surface-950 aspect-16/9 relative rounded-xl"
                                         src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop"
@@ -134,14 +148,11 @@ export function HeroSection() {
                                         width="1920"
                                         height="1080"
                                     />
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
                         </AnimatedGroup>
                     </div>
                 </section>
-                
-                {/* Trusted By Section */}
-                {/* <section className="bg-surface-950/50 pb-16 pt-16 md:pb-32"> ... </section> */}
             </main>
         </>
     )
@@ -178,9 +189,13 @@ const HeroHeader = () => {
     
     return (
         <header className="relative z-[100]">
-            <nav
+            <motion.nav
                 data-state={menuState && 'active'}
-                className="fixed z-20 w-full px-4 group top-4">
+                className="fixed z-20 w-full px-4 group top-4"
+                initial={{ y: -80, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: 'spring', bounce: 0.25, duration: 1.2, delay: 0.1 }}
+            >
                 <div className={cn(
                     'mx-auto max-w-6xl px-6 transition-all duration-500 rounded-2xl', 
                     isScrolled 
@@ -191,9 +206,14 @@ const HeroHeader = () => {
                         <div className="flex w-full justify-between items-center lg:w-auto">
                             <Link
                                 to="/"
-                                className="flex items-center space-x-2">
-                                <Logo />
-                                <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-white to-surface-100 bg-clip-text text-transparent">Salyzer</span>
+                                className="flex items-center space-x-2 group/logo">
+                                <motion.div
+                                    whileHover={{ rotate: [0, -10, 10, -5, 0], scale: 1.1 }}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    <Logo />
+                                </motion.div>
+                                <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-white to-surface-100 bg-clip-text text-transparent group-hover/logo:from-primary-300 group-hover/logo:to-primary-500 transition-all duration-500">Salyzer</span>
                             </Link>
 
                             <button
@@ -206,14 +226,20 @@ const HeroHeader = () => {
                         <div className="absolute inset-0 m-auto hidden size-fit lg:block">
                             <ul className="flex gap-8 text-sm font-medium">
                                 {menuItems.map((item, index) => (
-                                    <li key={index}>
+                                    <motion.li
+                                        key={index}
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.3 + index * 0.08, duration: 0.5 }}
+                                    >
                                         <Link
                                             to={item.href}
                                             onClick={(e) => handleNavClick(e, item.href)}
-                                            className="text-surface-400 hover:text-white block duration-300 transition-colors">
+                                            className="text-surface-400 hover:text-white block duration-300 transition-colors relative group/link py-1">
                                             <span>{item.name}</span>
+                                            <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-500 to-primary-400 group-hover/link:w-full transition-all duration-300 rounded-full" />
                                         </Link>
-                                    </li>
+                                    </motion.li>
                                 ))}
                             </ul>
                         </div>
@@ -229,39 +255,51 @@ const HeroHeader = () => {
                                             <Link
                                                 to={item.href}
                                                 onClick={(e) => handleNavClick(e, item.href)}
-                                                className="text-surface-300 hover:text-primary-400 block duration-300">
+                                                className="text-surface-300 hover:text-primary-400 block duration-300 hover:translate-x-2 transition-all">
                                                 <span>{item.name}</span>
                                             </Link>
                                         </li>
                                     ))}
                                 </ul>
                             </div>
-                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-4 sm:space-y-0 md:w-fit">
-                                <Button
-                                    asChild
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-surface-300 hover:text-white font-semibold">
-                                    <Link to="/login">Login</Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className="rounded-full px-6 font-bold">
-                                    <Link to="/register">Join Free</Link>
-                                </Button>
-                            </div>
+                            <motion.div
+                                className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-4 sm:space-y-0 md:w-fit"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.7, duration: 0.5 }}
+                            >
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                                    <Button
+                                        asChild
+                                        variant="ghost"
+                                        size="sm"
+                                        className="text-surface-300 hover:text-white font-semibold hover:bg-surface-800/50">
+                                        <Link to="/login">Login</Link>
+                                    </Button>
+                                </motion.div>
+                                <motion.div
+                                    whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(99, 102, 241, 0.3)' }}
+                                    whileTap={{ scale: 0.97 }}
+                                >
+                                    <Button
+                                        asChild
+                                        size="sm"
+                                        className="rounded-full px-6 font-bold">
+                                        <Link to="/register">Join Free</Link>
+                                    </Button>
+                                </motion.div>
+                            </motion.div>
                         </div>
                     </div>
                 </div>
-            </nav>
+            </motion.nav>
         </header>
     )
 }
 
 const Logo = () => {
     return (
-        <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30">
+        <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 hover:bg-primary-500 transition-all duration-300">
             <svg
                 viewBox="0 0 24 24"
                 fill="none"

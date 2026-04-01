@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { motion } from "framer-motion";
 
 const faqs = [
     {
@@ -29,21 +30,63 @@ const faqs = [
     }
 ];
 
+const headingVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: 'spring',
+            bounce: 0.3,
+            duration: 1,
+        },
+    },
+}
+
+const faqItemVariants = {
+    hidden: { opacity: 0, x: -30 },
+    visible: (i: number) => ({
+        opacity: 1,
+        x: 0,
+        transition: {
+            type: 'spring',
+            bounce: 0.3,
+            duration: 0.8,
+            delay: 0.1 + i * 0.1,
+        },
+    }),
+}
+
 export const FaqSection = () => {
     return (
         <section className="py-24 md:py-32 bg-surface-950 border-t border-surface-900" id="faq">
             <div className="max-w-4xl mx-auto px-6">
-                <div className="text-center mb-20">
+                <motion.div
+                    className="text-center mb-20"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.5 }}
+                    variants={headingVariants}
+                >
                     <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">Common Questions</h2>
                     <p className="text-surface-400 text-lg">Everything you need to know about the Salyzer AI Platform.</p>
-                </div>
+                </motion.div>
 
                 <Accordion type="single" collapsible className="w-full">
                     {faqs.map((faq, index) => (
-                        <AccordionItem key={index} value={`item-${index}`}>
-                            <AccordionTrigger>{faq.question}</AccordionTrigger>
-                            <AccordionContent>{faq.answer}</AccordionContent>
-                        </AccordionItem>
+                        <motion.div
+                            key={index}
+                            custom={index}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.3 }}
+                            variants={faqItemVariants}
+                        >
+                            <AccordionItem value={`item-${index}`} className="hover:bg-surface-900/40 transition-all duration-300 px-4 -mx-4 rounded-xl">
+                                <AccordionTrigger>{faq.question}</AccordionTrigger>
+                                <AccordionContent>{faq.answer}</AccordionContent>
+                            </AccordionItem>
+                        </motion.div>
                     ))}
                 </Accordion>
             </div>

@@ -97,7 +97,7 @@ export default function Analysis() {
     return (
       <div className="text-center py-20">
         <h2 className="text-xl font-semibold text-surface-300">Analysis not found</h2>
-        <Link to="/" className="text-primary-400 hover:text-primary-300 mt-4 inline-block">
+        <Link to="/dashboard" className="text-primary-400 hover:text-primary-300 mt-4 inline-block">
           ← Back to Dashboard
         </Link>
       </div>
