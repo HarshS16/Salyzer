@@ -79,7 +79,7 @@ export default function CallHistory() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search calls..."
-            className="pl-10 pr-4 py-3 bg-white border border-dashboard-border rounded-2xl text-sm text-dashboard-text-main placeholder:text-dashboard-text-sub focus:outline-none focus:ring-4 focus:ring-dashboard-primary/5 focus:border-dashboard-primary/20 shadow-sm transition-all w-full sm:w-80 font-medium"
+            className="pl-10 pr-4 py-3 bg-dashboard-card border border-dashboard-border rounded-2xl text-sm text-dashboard-text-main placeholder:text-dashboard-text-sub focus:outline-none focus:ring-4 focus:ring-dashboard-primary/5 focus:border-dashboard-primary/20 shadow-sm transition-all w-full sm:w-80 font-medium"
           />
         </div>
       </div>
@@ -120,7 +120,7 @@ export default function CallHistory() {
             >
               <Link
                 to={`/analysis/${call.id}`}
-                className="flex items-center gap-4 p-5 bg-white border border-dashboard-border rounded-[24px] hover:border-dashboard-primary/20 hover:bg-dashboard-primary-light/30 shadow-sm transition-all duration-300 group"
+                className="flex items-center gap-4 p-5 bg-dashboard-card border border-dashboard-border rounded-[24px] hover:border-dashboard-primary/20 hover:bg-dashboard-primary-light/30 shadow-sm transition-all duration-300 group"
               >
                 <div className={`w-14 h-14 rounded-xl border ${getScoreBg(call.overallScore)} flex items-center justify-center flex-shrink-0`}>
                   <span className={`text-xl font-bold ${getScoreColor(call.overallScore)}`}>

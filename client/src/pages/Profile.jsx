@@ -108,7 +108,7 @@ export default function Profile() {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Core Identity */}
-        <section className="bg-white border border-dashboard-border rounded-[32px] p-8 shadow-sm">
+        <section className="bg-dashboard-card border border-dashboard-border rounded-[32px] p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-10 rounded-xl bg-dashboard-primary-light flex items-center justify-center text-dashboard-primary">
               <User className="w-5 h-5" />
@@ -148,7 +148,7 @@ export default function Profile() {
         </section>
 
         {/* Custom Attributes */}
-        <section className="bg-white border border-dashboard-border rounded-[32px] p-8 shadow-sm">
+        <section className="bg-dashboard-card border border-dashboard-border rounded-[32px] p-8 shadow-sm">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
@@ -194,7 +194,7 @@ export default function Profile() {
                     type="text"
                     value={attr.value}
                     onChange={(e) => handleUpdateField(index, 'value', e.target.value)}
-                    className="flex-[2] w-full bg-white border border-dashboard-border rounded-xl py-3 px-4 text-sm font-medium text-dashboard-text-main focus:outline-none focus:ring-4 focus:ring-dashboard-primary/5 transition-all shadow-sm"
+                    className="flex-[2] w-full bg-dashboard-card border border-dashboard-border rounded-xl py-3 px-4 text-sm font-medium text-dashboard-text-main focus:outline-none focus:ring-4 focus:ring-dashboard-primary/5 transition-all shadow-sm"
                     placeholder="Value (e.g. Senior Account Executive)"
                   />
                   <button

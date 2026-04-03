@@ -27,6 +27,7 @@ import {
 } from 'recharts'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import toast from 'react-hot-toast'
 
 const chartData = [
@@ -41,6 +42,7 @@ const chartData = [
 
 export default function Dashboard() {
   const { user } = useAuth()
+  const { theme, toggleTheme } = useTheme()
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
     totalCalls: "1,482",
@@ -116,7 +118,7 @@ export default function Dashboard() {
           <input
             type="text"
             placeholder="Search insights..."
-            className="w-full bg-white border border-transparent focus:border-dashboard-primary/20 focus:ring-4 focus:ring-dashboard-primary/5 rounded-2xl py-3 pl-12 pr-4 text-sm font-medium transition-all outline-none"
+            className="w-full bg-dashboard-card border border-transparent focus:border-dashboard-primary/20 focus:ring-4 focus:ring-dashboard-primary/5 rounded-2xl py-3 pl-12 pr-4 text-sm font-medium transition-all outline-none"
           />
         </div>
 
@@ -126,6 +128,39 @@ export default function Dashboard() {
         </nav>
 
         <div className="flex items-center gap-6">
+          <button
+            className="theme-toggle"
+            type="button"
+            title="Toggle theme"
+            aria-label="Toggle theme"
+            onClick={toggleTheme}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              className="theme-toggle__around"
+              viewBox="0 0 32 32"
+            >
+              <clipPath id="theme-toggle__around__cutout">
+                <path d="M0 0h42v30a1 1 0 00-16 13H0Z" />
+              </clipPath>
+              <g clipPath="url(#theme-toggle__around__cutout)">
+                <circle cx="16" cy="16" r="8.4" />
+                <g>
+                  <circle cx="16" cy="3.3" r="2.3" />
+                  <circle cx="27" cy="9.7" r="2.3" />
+                  <circle cx="27" cy="22.3" r="2.3" />
+                  <circle cx="16" cy="28.7" r="2.3" />
+                  <circle cx="5" cy="22.3" r="2.3" />
+                  <circle cx="5" cy="9.7" r="2.3" />
+                </g>
+              </g>
+            </svg>
+          </button>
+
           <Link 
             to="/profile"
             className="flex items-center gap-3 pl-4 border-l border-dashboard-border group hover:bg-dashboard-primary-light/30 p-2 rounded-2xl transition-all"
@@ -172,7 +207,7 @@ export default function Dashboard() {
       {/* Stats Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Calls */}
-        <div className="bg-white p-8 rounded-[32px] border border-dashboard-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+        <div className="bg-dashboard-card p-8 rounded-[32px] border border-dashboard-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
           <div className="flex items-center justify-between mb-8">
             <div className="w-12 h-12 rounded-xl bg-dashboard-primary-light flex items-center justify-center text-dashboard-primary">
               <Phone className="w-6 h-6" />
@@ -187,7 +222,7 @@ export default function Dashboard() {
         </div>
 
         {/* Avg Performance */}
-        <div className="bg-white p-8 rounded-[32px] border border-dashboard-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+        <div className="bg-dashboard-card p-8 rounded-[32px] border border-dashboard-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
           <div className="flex items-center justify-between mb-8">
             <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
               <BarChart2 className="w-6 h-6" />
@@ -206,7 +241,7 @@ export default function Dashboard() {
         </div>
 
         {/* Unanswered Objections */}
-        <div className="bg-white p-8 rounded-[32px] border border-dashboard-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+        <div className="bg-dashboard-card p-8 rounded-[32px] border border-dashboard-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
           <div className="flex items-center justify-between mb-8">
             <div className="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center text-red-500">
               <AlertTriangle className="w-6 h-6" />
@@ -224,7 +259,7 @@ export default function Dashboard() {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Chart Column */}
-        <div className="lg:col-span-2 bg-white p-8 rounded-[40px] border border-dashboard-border shadow-sm">
+        <div className="lg:col-span-2 bg-dashboard-card p-8 rounded-[40px] border border-dashboard-border shadow-sm">
           <div className="flex items-start justify-between mb-10">
             <div>
               <h2 className="text-xl font-extrabold text-dashboard-text-main">Sales Performance & Emotional Sentiment</h2>
@@ -251,7 +286,7 @@ export default function Dashboard() {
                     <stop offset="95%" stopColor="#0052ff" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-dashboard-border)" opacity={0.5} />
                 <XAxis 
                   dataKey="name" 
                   axisLine={false} 
@@ -292,7 +327,7 @@ export default function Dashboard() {
         {/* Sidebar Panels Column */}
         <div className="space-y-8">
           {/* Agent Spotlight */}
-          <div className="bg-white p-8 rounded-[40px] border border-dashboard-border shadow-sm">
+          <div className="bg-dashboard-card p-8 rounded-[40px] border border-dashboard-border shadow-sm">
             <h3 className="text-lg font-extrabold text-dashboard-text-main mb-6">Agent Spotlight</h3>
             <div className="space-y-6">
               {[
@@ -317,7 +352,7 @@ export default function Dashboard() {
           </div>
 
           {/* Missed Opportunities */}
-          <div className="bg-white p-8 rounded-[40px] border border-dashboard-border shadow-sm">
+          <div className="bg-dashboard-card p-8 rounded-[40px] border border-dashboard-border shadow-sm">
             <h3 className="text-lg font-extrabold text-dashboard-text-main mb-6">Top Missed Opportunities</h3>
             <div className="space-y-10">
               <div className="space-y-3">
@@ -343,8 +378,8 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Calls Analysis Table */}
-      <div className="bg-white rounded-[40px] border border-dashboard-border shadow-sm overflow-hidden mb-12">
-        <div className="p-8 flex items-center justify-between border-b border-dashboard-border bg-white sticky top-0 z-10">
+      <div className="bg-dashboard-card rounded-[40px] border border-dashboard-border shadow-sm overflow-hidden mb-12">
+        <div className="p-8 flex items-center justify-between border-b border-dashboard-border bg-dashboard-card sticky top-0 z-10">
           <h2 className="text-xl font-extrabold text-dashboard-text-main">Recent Calls Analysis</h2>
           <div className="flex items-center gap-4">
             <button className="p-2 text-dashboard-text-sub hover:text-dashboard-text-main transition-colors">

@@ -155,7 +155,7 @@ export default function Analysis() {
      <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white border border-dashboard-border rounded-[32px] overflow-hidden shadow-sm"
+      className="bg-dashboard-card border border-dashboard-border rounded-[32px] overflow-hidden shadow-sm"
     >
       <button
         onClick={() => toggleSection(id)}
@@ -199,7 +199,7 @@ export default function Analysis() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white border border-dashboard-border rounded-[40px] p-8 lg:p-12 shadow-sm relative overflow-hidden"
+        className="bg-dashboard-card border border-dashboard-border rounded-[40px] p-8 lg:p-12 shadow-sm relative overflow-hidden"
       >
         <div className="flex flex-col lg:flex-row lg:items-center gap-6">
           <div className="flex items-center gap-5">
@@ -446,7 +446,7 @@ export default function Analysis() {
                 <h4 className="text-base font-extrabold text-dashboard-text-main mb-1">{item.title}</h4>
                 <p className="text-sm font-medium text-dashboard-text-sub leading-relaxed">{item.suggestion}</p>
                 {item.example && (
-                  <div className="mt-3 p-4 bg-white border border-dashboard-primary/10 rounded-xl shadow-sm">
+                  <div className="mt-3 p-4 bg-dashboard-card border border-dashboard-primary/10 rounded-xl shadow-sm">
                     <p className="text-[10px] font-black uppercase tracking-widest text-dashboard-primary mb-2">Better phrasing:</p>
                     <p className="text-sm text-accent-400 italic">"{item.example}"</p>
                   </div>
@@ -509,7 +509,7 @@ export default function Analysis() {
                 <div key={i} className={`flex flex-col ${isAgent ? 'items-start' : isCustomer ? 'items-end' : 'items-start'} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
                   <div className={`max-w-[85%] md:max-w-[75%] rounded-[24px] px-6 py-5 shadow-sm relative ${
                     isAgent ? 'bg-dashboard-primary-light border-dashboard-primary/10 text-dashboard-text-main rounded-bl-sm' :
-                    isCustomer ? 'bg-white border border-dashboard-border text-dashboard-text-main rounded-br-sm' :
+                    isCustomer ? 'bg-dashboard-card border border-dashboard-border text-dashboard-text-main rounded-br-sm' :
                     'bg-dashboard-bg border-2 border-dashboard-border border-dashed text-dashboard-text-sub italic'
                   }`}>
                     {(isAgent || isCustomer) && (

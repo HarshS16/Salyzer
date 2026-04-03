@@ -92,7 +92,7 @@ export default function Scripts() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           onSubmit={handleAdd}
-          className="bg-white border border-dashboard-border rounded-[32px] p-8 space-y-6 shadow-sm"
+          className="bg-dashboard-card border border-dashboard-border rounded-[32px] p-8 space-y-6 shadow-sm"
         >
           <div>
             <label className="block text-sm font-bold text-dashboard-text-main mb-2 ml-1">Script Title</label>
@@ -166,7 +166,7 @@ export default function Scripts() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="bg-white border border-dashboard-border rounded-[32px] p-6 hover:border-dashboard-primary/20 hover:bg-dashboard-primary-light/10 transition-all duration-300 group shadow-sm"
+              className="bg-dashboard-card border border-dashboard-border rounded-[32px] p-6 hover:border-dashboard-primary/20 hover:bg-dashboard-primary-light/10 transition-all duration-300 group shadow-sm"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">

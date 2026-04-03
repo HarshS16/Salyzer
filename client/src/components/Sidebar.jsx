@@ -34,7 +34,7 @@ export default function Sidebar({ onClose }) {
   )
 
   return (
-    <div className="h-full flex flex-col bg-white border-r border-dashboard-border relative">
+    <div className="h-full flex flex-col bg-dashboard-card border-r border-dashboard-border relative">
       {/* Logo */}
       <div className="p-8 pb-4">
         <div className="flex items-center gap-3">

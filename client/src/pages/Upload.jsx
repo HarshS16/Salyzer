@@ -118,7 +118,7 @@ export default function Upload() {
                   ? 'border-dashboard-primary bg-dashboard-primary-light'
                   : file
                   ? 'border-accent-500/50 bg-accent-500/5'
-                  : 'border-dashboard-border hover:border-dashboard-primary/30 bg-white shadow-sm'
+                  : 'border-dashboard-border hover:border-dashboard-primary/30 bg-dashboard-card shadow-sm'
               }`}
             >
               <input {...getInputProps()} id="audio-upload-input" />
@@ -186,7 +186,7 @@ export default function Upload() {
             key="processing"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white border border-dashboard-border rounded-[40px] p-10 shadow-sm"
+            className="bg-dashboard-card border border-dashboard-border rounded-[40px] p-10 shadow-sm"
           >
             <div className="flex items-center gap-4 mb-10">
               <div className="w-12 h-12 rounded-xl bg-dashboard-primary-light flex items-center justify-center">
@@ -238,7 +238,7 @@ export default function Upload() {
       </AnimatePresence>
 
       {/* Tips */}
-      <div className="bg-white border border-dashboard-border rounded-[32px] p-8 shadow-sm">
+      <div className="bg-dashboard-card border border-dashboard-border rounded-[32px] p-8 shadow-sm">
         <h3 className="text-lg font-extrabold text-dashboard-text-main mb-4 flex items-center gap-2">
           <AlertCircle className="w-5 h-5 text-dashboard-primary" />
           Tips for best results
