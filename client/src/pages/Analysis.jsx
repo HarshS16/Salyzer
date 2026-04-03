@@ -111,6 +111,12 @@ export default function Analysis() {
   const missedOpportunities = result?.missedOpportunities || []
   const feedback = result?.feedback || []
   const scriptComparison = result?.scriptComparison || []
+  
+  // Smart fallback for older analyses that don't have the conversionProbability field
+  const conversionProbability = scores.conversionProbability !== undefined 
+    ? scores.conversionProbability 
+    : Math.round(((scores.persuasion || 0) * 1.5 + (scores.closing || 0) * 1.5 + (scores.rapport || 0)) / 4)
+
 
   const scoreData = [
     { subject: 'Clarity', value: scores.clarity || 0 },
@@ -253,6 +259,51 @@ export default function Analysis() {
               </div>
             ))}
           </div>
+        </div>
+      </motion.div>
+
+      {/* Conversion Probability Meter */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.1 }}
+        className="bg-dashboard-card border border-dashboard-border rounded-[40px] p-8 shadow-sm"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-accent-500/10 flex items-center justify-center text-accent-500">
+              <TrendingUp className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-extrabold text-dashboard-text-main">Conversion Probability</h3>
+              <p className="text-sm font-medium text-dashboard-text-sub">Estimated likelihood of a successful close based on AI analysis</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <span className={`text-4xl font-black ${getScoreColor(conversionProbability || 0)}`}>
+              {conversionProbability || 0}%
+            </span>
+          </div>
+        </div>
+        
+        <div className="relative h-6 bg-dashboard-bg rounded-full overflow-hidden border border-dashboard-border shadow-inner">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${conversionProbability || 0}%` }}
+            transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+            className={`h-full rounded-full shadow-lg transition-colors ${
+              (conversionProbability || 0) >= 80 ? 'bg-gradient-to-r from-accent-400 to-accent-500' :
+              (conversionProbability || 0) >= 60 ? 'bg-gradient-to-r from-dashboard-primary to-accent-400' :
+              (conversionProbability || 0) >= 40 ? 'bg-gradient-to-r from-warning-400 to-warning-500' :
+              'from-danger-500 to-danger-600'
+            }`}
+          />
+        </div>
+        
+        <div className="flex justify-between mt-3 px-1 text-[10px] font-black uppercase tracking-widest text-[#94a3b8]">
+          <span>Low Interest</span>
+          <span>Highly Engaged</span>
+          <span>Closing Likely</span>
         </div>
       </motion.div>
 

@@ -168,7 +168,8 @@ Provide your analysis as a JSON object with the following structure (do NOT incl
     "persuasion": <0-100>,
     "objectionHandling": <0-100>,
     "closing": <0-100>,
-    "rapport": <0-100>
+    "rapport": <0-100>,
+    "conversionProbability": <0-100 (estimated likelihood of successful conversion)>
   },
   "stages": [
     {
