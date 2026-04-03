@@ -5,10 +5,10 @@ import {
   Upload,
   History,
   FileText,
-  LogOut,
-  X,
+  Users,
+  Plus,
   Zap,
-  Users, // Added Users icon
+  LogOut,
 } from 'lucide-react'
 
 const navItems = [
@@ -16,7 +16,7 @@ const navItems = [
   { to: '/upload', icon: Upload, label: 'Upload Call' },
   { to: '/history', icon: History, label: 'Call History' },
   { to: '/scripts', icon: FileText, label: 'Sales Scripts' },
-  { to: '/team', icon: Users, label: 'Team Performance', managerOnly: true }, // Added Team link
+  { to: '/team', icon: Users, label: 'Team Performance', managerOnly: true },
 ]
 
 export default function Sidebar({ onClose }) {
@@ -34,32 +34,26 @@ export default function Sidebar({ onClose }) {
   )
 
   return (
-    <div className="h-full flex flex-col bg-surface-900/80 backdrop-blur-xl border-r border-surface-800">
+    <div className="h-full flex flex-col bg-white border-r border-dashboard-border relative">
       {/* Logo */}
-      <div className="flex items-center justify-between p-6 border-b border-surface-800">
+      <div className="p-8 pb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg shadow-primary-500/25">
-            <Zap className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-dashboard-primary flex items-center justify-center shadow-lg shadow-dashboard-primary/20">
+            <Zap className="w-5 h-5 text-white fill-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
-              Salyzer
+            <h1 className="text-lg font-bold text-dashboard-primary tracking-tight leading-none">
+              Salyzer AI
             </h1>
-            <p className="text-[10px] uppercase tracking-widest text-surface-500 font-medium">
-              AI Sales Analyzer
+            <p className="text-[9px] uppercase tracking-widest text-[#94a3b8] font-bold mt-1">
+              The Intelligence Layer
             </p>
           </div>
         </div>
-        <button
-          onClick={onClose}
-          className="lg:hidden p-1.5 rounded-lg hover:bg-surface-800 transition-colors"
-        >
-          <X className="w-4 h-4 text-surface-400" />
-        </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 mt-4 px-0 space-y-1">
         {filteredNavItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
@@ -67,32 +61,50 @@ export default function Sidebar({ onClose }) {
             end={to === '/'}
             onClick={onClose}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${
+              `group relative flex items-center gap-3 px-8 py-4 text-sm font-semibold transition-all duration-200 ${
                 isActive
-                  ? 'bg-primary-500/15 text-primary-400 shadow-lg shadow-primary-500/5'
-                  : 'text-surface-400 hover:text-surface-200 hover:bg-surface-800/60'
+                  ? 'text-dashboard-primary'
+                  : 'text-[#94a3b8] hover:text-[#475569]'
               }`
             }
           >
-            <Icon className="w-[18px] h-[18px] transition-transform group-hover:scale-110" />
-            {label}
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-dashboard-primary rounded-r-full shadow-[2px_0_10px_rgba(0,82,255,0.3)]" />
+                )}
+                <Icon className={`w-5 h-5 ${isActive ? 'text-dashboard-primary' : 'text-[#cbd5e1] group-hover:text-[#94a3b8]'}`} />
+                {label}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      {/* User section */}
-      <div className="p-4 border-t border-surface-800">
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface-800/40">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-sm font-bold text-white">
+      <div className="p-4 space-y-3">
+        {/* New Analysis Button */}
+        <button
+          onClick={() => navigate('/upload')}
+          className="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-dashboard-primary hover:bg-[#0042cc] text-white font-bold rounded-2xl shadow-xl shadow-dashboard-primary/30 transition-all duration-300 hover:-translate-y-0.5 active:scale-95 group mb-2"
+        >
+          <div className="w-6 h-6 flex items-center justify-center rounded-lg bg-white/20 group-hover:bg-white/30 transition-colors">
+            <Plus className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-sm">New Analysis</span>
+        </button>
+
+        {/* User Card */}
+        <div className="p-3 bg-dashboard-bg border border-dashboard-border rounded-2xl flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-dashboard-primary-light flex items-center justify-center text-sm font-black text-dashboard-primary">
             {user?.name?.charAt(0)?.toUpperCase() || 'U'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-surface-200 truncate">{user?.name}</p>
-            <p className="text-xs text-surface-500 capitalize">{user?.role}</p>
+            <p className="text-sm font-bold text-dashboard-text-main truncate">{user?.name}</p>
+            <p className="text-[10px] font-black text-dashboard-text-sub uppercase tracking-widest">{user?.role}</p>
           </div>
           <button
             onClick={handleLogout}
-            className="p-2 rounded-lg hover:bg-surface-700 transition-colors text-surface-400 hover:text-danger-400"
+            className="p-2 text-dashboard-text-sub hover:text-red-500 transition-colors"
             title="Logout"
           >
             <LogOut className="w-4 h-4" />

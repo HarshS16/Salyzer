@@ -219,16 +219,62 @@ IMPORTANT GUIDELINES:
 - For tone timeline, provide at least 4-5 data points across the conversation
 - All scores should be integers between 0 and 100`
 
-  // Create a list of promises, one for each model
-  const analysisPromises = MODELS_TO_RACE.map(async (modelName) => {
+  const hasOpenRouter = process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_API_KEY !== 'your_openrouter_api_key_here'
+  
+  // Use OpenRouter Parallel Racing if available, otherwise use direct OpenAI
+  if (hasOpenRouter) {
+    const analysisPromises = MODELS_TO_RACE.map(async (modelName) => {
+      try {
+        console.log(`🤖 Requesting analysis from (OpenRouter): ${modelName}`)
+        const response = await openRouter.chat.completions.create({
+          model: modelName,
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a sales performance analyst. Always respond with valid JSON only, no markdown formatting or code blocks.',
+            },
+            {
+              role: 'user',
+              content: prompt,
+            },
+          ],
+          temperature: 0.7,
+        })
+
+        const content = response.choices[0].message.content.trim()
+        let cleanJson = content
+        if (cleanJson.startsWith('```')) {
+          cleanJson = cleanJson.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
+        }
+
+        const result = JSON.parse(cleanJson)
+        console.log(`⚡ ${modelName} responded first and won the race!`)
+        return result
+      } catch (err) {
+        console.error(`❌ Model ${modelName} failed:`, err.message)
+        throw err
+      }
+    })
+
     try {
-      console.log(`🤖 Requesting analysis from: ${modelName}`)
-      const response = await openRouter.chat.completions.create({
-        model: modelName,
+      return await Promise.any(analysisPromises)
+    } catch (err) {
+      if (err instanceof AggregateError) {
+        console.error('All OpenRouter models failed. Falling back to demo data.')
+        return generateDemoAnalysis(transcript)
+      }
+      throw err
+    }
+  } else {
+    // Direct OpenAI Path
+    try {
+      console.log('🤖 Requesting analysis from direct OpenAI (GPT-4o-mini)...')
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
         messages: [
           {
             role: 'system',
-            content: 'You are a sales performance analyst. Always respond with valid JSON only, no markdown formatting or code blocks.',
+            content: 'You are a sales performance analyst. Always respond with valid JSON only.',
           },
           {
             role: 'user',
@@ -236,33 +282,14 @@ IMPORTANT GUIDELINES:
           },
         ],
         temperature: 0.7,
+        response_format: { type: "json_object" }
       })
 
-      const content = response.choices[0].message.content.trim()
-      
-      // Clean up any markdown formatting
-      let cleanJson = content
-      if (cleanJson.startsWith('```')) {
-        cleanJson = cleanJson.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
-      }
-
-      const result = JSON.parse(cleanJson)
-      console.log(`⚡ ${modelName} responded first and won the race!`)
-      return result
+      return JSON.parse(response.choices[0].message.content)
     } catch (err) {
-      console.error(`❌ Model ${modelName} failed:`, err.message)
-      throw err // Re-throw to let Promise.any handle it
+      console.error('Direct OpenAI analysis failed. Falling back to demo data.', err.message)
+      return generateDemoAnalysis(transcript)
     }
-  })
-
-  try {
-    // Return the first successful response
-    return await Promise.any(analysisPromises)
-  } catch (err) {
-    if (err instanceof AggregateError) {
-      throw new Error('All AI models failed to respond. Please check your OpenRouter API key.')
-    }
-    throw err
   }
 }
 

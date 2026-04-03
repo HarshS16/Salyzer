@@ -9,7 +9,8 @@ import { initDB } from './db.js'
 import authRoutes from './routes/auth.js'
 import callRoutes from './routes/calls.js'
 import scriptRoutes from './routes/scripts.js'
-import teamRoutes from './routes/team.js' // Added team import
+import teamRoutes from './routes/team.js' 
+import userRoutes from './routes/users.js'
 
 dotenv.config()
 
@@ -35,30 +36,31 @@ app.use(cors({
 app.use(express.json({ limit: '100mb' }))
 app.use(express.urlencoded({ extended: true, limit: '100mb' }))
 
-// Handle Preflight (OPTIONS) requests explicitly
-app.options('*', cors())
+    // Handle Preflight (OPTIONS) requests explicitly
+    app.options('*all', cors())
 
-// Start server after database initialization
-async function startServer() {
-  try {
-    // Initialize database (async because of sql.js)
-    await initDB()
+    // Start server after database initialization
+    async function startServer() {
+      try {
+        // Initialize database (async because of sql.js)
+        await initDB()
 
-    // Routes
-    app.use('/api/auth', authRoutes)
-    app.use('/api/calls', callRoutes)
-    app.use('/api/scripts', scriptRoutes)
-    app.use('/api/team', teamRoutes) // Added team route
+        // Routes
+        app.use('/api/auth', authRoutes)
+        app.use('/api/calls', callRoutes)
+        app.use('/api/scripts', scriptRoutes)
+        app.use('/api/team', teamRoutes)
+        app.use('/api/users', userRoutes)
 
-    // Serve static frontend in production
-    const clientDistPath = join(__dirname, '..', 'client', 'dist')
-    if (existsSync(clientDistPath)) {
-      app.use(express.static(clientDistPath))
-      app.get('*', (req, res) => {
-        if (!req.path.startsWith('/api')) {
-          res.sendFile(join(clientDistPath, 'index.html'))
-        }
-      })
+        // Serve static frontend in production
+        const clientDistPath = join(__dirname, '..', 'client', 'dist')
+        if (existsSync(clientDistPath)) {
+          app.use(express.static(clientDistPath))
+          app.get('*all', (req, res) => {
+            if (!req.path.startsWith('/api')) {
+              res.sendFile(join(clientDistPath, 'index.html'))
+            }
+          })
       console.log('🌐 Serving production frontend from client/dist')
     }
 
