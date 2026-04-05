@@ -108,16 +108,16 @@ Customer: Thanks, bye.`
     }
 
     // 2. Handle Analysis
-    if (hasOpenRouterKey) {
-      console.log('🧠 Analyzing transcript with OpenRouter (Parallel Racing)...')
+    if (hasOpenRouterKey || hasOpenAIKey || hasGroqKey) {
+      console.log('🧠 Analyzing transcript with AI...')
       const scripts = await dbAll('SELECT title, content FROM scripts WHERE userId = ?', [req.user.id])
       analysisResult = await analyzeTranscript(transcript, scripts)
     } else {
-      console.log('⚠️ No OpenRouter key. Using demo analysis metrics.')
+      console.log('⚠️ No AI analysis keys. Using demo analysis metrics.')
       analysisResult = generateDemoAnalysis(transcript)
     }
 
-    // Updated to await dbRun
+    // Save to DB (using lowercase to avoid Postgres case issues)
     await dbRun(
       'INSERT INTO calls (id, userId, filename, transcript, analysisResult, overallScore) VALUES (?, ?, ?, ?, ?, ?)',
       [
@@ -151,8 +151,8 @@ Customer: Thanks, bye.`
 // Get all calls for user
 router.get('/', authenticateToken, async (req, res) => {
   try {
-    // Updated to await dbAll
-    const calls = await dbAll('SELECT id, filename, overallScore, createdAt FROM calls WHERE userId = ? ORDER BY createdAt DESC', [req.user.id])
+    // Postgres returns lowercase by default, use double quotes to alias and preserve case for frontend
+    const calls = await dbAll('SELECT id, filename, overallscore as "overallScore", createdat as "createdAt" FROM calls WHERE userId = ? ORDER BY createdat DESC', [req.user.id])
     res.json(calls)
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch calls' })
@@ -175,9 +175,9 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
       [userId]
     )
 
-    // Updated to await dbAll
+    // Updated to await dbAll with aliases
     const recentCalls = await dbAll(
-      'SELECT id, filename, overallScore, createdAt FROM calls WHERE userId = ? ORDER BY createdAt DESC LIMIT 5',
+      'SELECT id, filename, overallscore as "overallScore", createdat as "createdAt" FROM calls WHERE userId = ? ORDER BY createdat DESC LIMIT 5',
       [userId]
     )
 
@@ -205,15 +205,16 @@ router.get('/:id', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Call not found' })
     }
 
+    // Manually map to camelCase as safety for single records
     res.json({
       call: {
         id: call.id,
         filename: call.filename,
         transcript: call.transcript,
-        overallScore: call.overallScore,
-        createdAt: call.createdAt,
+        overallScore: call.overallscore,
+        createdAt: call.createdat,
       },
-      result: JSON.parse(call.analysisResult || '{}'),
+      result: JSON.parse(call.analysisresult || '{}'),
     })
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch call analysis' })

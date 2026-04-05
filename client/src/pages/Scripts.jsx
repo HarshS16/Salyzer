@@ -72,16 +72,16 @@ export default function Scripts() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white">Sales Scripts</h1>
-          <p className="text-surface-400 mt-1">
+          <h1 className="text-3xl font-extrabold text-dashboard-text-main tracking-tight">Sales Scripts</h1>
+          <p className="text-dashboard-text-sub font-medium mt-1">
             Top-performing scripts used for RAG comparisons
           </p>
         </div>
         <button
           onClick={() => setShowAdd(!showAdd)}
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/25 transition-all duration-300 text-sm"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-dashboard-primary hover:bg-[#0042cc] text-white font-bold rounded-xl shadow-lg shadow-dashboard-primary/20 transition-all duration-300"
         >
-          {showAdd ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+          {showAdd ? <X className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
           {showAdd ? 'Cancel' : 'Add Script'}
         </button>
       </div>
@@ -92,28 +92,28 @@ export default function Scripts() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           onSubmit={handleAdd}
-          className="bg-surface-900/60 backdrop-blur border border-surface-800 rounded-2xl p-6 space-y-4"
+          className="bg-dashboard-card border border-dashboard-border rounded-[32px] p-8 space-y-6 shadow-sm"
         >
           <div>
-            <label className="block text-sm font-medium text-surface-300 mb-2">Script Title</label>
+            <label className="block text-sm font-bold text-dashboard-text-main mb-2 ml-1">Script Title</label>
             <input
               id="script-title"
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              className="w-full px-4 py-3 bg-surface-800 border border-surface-700 rounded-xl text-surface-100 placeholder:text-surface-600 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all"
+              className="w-full px-5 py-3.5 bg-dashboard-bg border border-dashboard-border rounded-2xl text-dashboard-text-main placeholder:text-dashboard-text-sub focus:outline-none focus:ring-4 focus:ring-dashboard-primary/5 focus:border-dashboard-primary/20 transition-all font-medium"
               placeholder="e.g., SaaS Cold Call Script"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-surface-300 mb-2">Script Content</label>
+            <label className="block text-sm font-bold text-dashboard-text-main mb-2 ml-1">Script Content</label>
             <textarea
               id="script-content"
               value={newContent}
               onChange={(e) => setNewContent(e.target.value)}
               rows={8}
-              className="w-full px-4 py-3 bg-surface-800 border border-surface-700 rounded-xl text-surface-100 placeholder:text-surface-600 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all resize-none"
+              className="w-full px-5 py-4 bg-dashboard-bg border border-dashboard-border rounded-2xl text-dashboard-text-main placeholder:text-dashboard-text-sub focus:outline-none focus:ring-4 focus:ring-dashboard-primary/5 focus:border-dashboard-primary/20 transition-all resize-none font-medium"
               placeholder="Paste your top-performing sales script here..."
               required
             />
@@ -130,7 +130,7 @@ export default function Scripts() {
               id="save-script"
               type="submit"
               disabled={submitting}
-              className="px-5 py-2.5 bg-primary-600 hover:bg-primary-500 text-white font-medium rounded-xl transition-colors text-sm flex items-center gap-2 disabled:opacity-50"
+              className="px-8 py-3 bg-dashboard-primary hover:bg-[#0042cc] text-white font-bold rounded-xl shadow-lg shadow-dashboard-primary/20 transition-all flex items-center gap-2 disabled:opacity-50"
             >
               {submitting ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -166,16 +166,16 @@ export default function Scripts() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="bg-surface-900/60 border border-surface-800 rounded-2xl p-5 hover:border-surface-700 transition-all duration-200 group"
+              className="bg-dashboard-card border border-dashboard-border rounded-[32px] p-6 hover:border-dashboard-primary/20 hover:bg-dashboard-primary-light/10 transition-all duration-300 group shadow-sm"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary-500/10 flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-primary-400" />
+                  <div className="w-12 h-12 rounded-xl bg-dashboard-primary-light flex items-center justify-center text-dashboard-primary">
+                    <FileText className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-surface-200">{script.title}</h3>
-                    <p className="text-xs text-surface-500">
+                    <h3 className="text-base font-extrabold text-dashboard-text-main leading-tight">{script.title}</h3>
+                    <p className="text-xs font-bold text-dashboard-text-sub mt-1">
                       Added {new Date(script.createdAt).toLocaleDateString()}
                     </p>
                   </div>
@@ -188,7 +188,7 @@ export default function Scripts() {
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-sm text-surface-400 leading-relaxed line-clamp-3">
+              <p className="text-sm text-dashboard-text-sub font-medium leading-relaxed line-clamp-3">
                 {script.content}
               </p>
             </motion.div>

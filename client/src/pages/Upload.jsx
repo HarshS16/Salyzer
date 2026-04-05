@@ -98,8 +98,8 @@ export default function Upload() {
     <div className="max-w-2xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl lg:text-3xl font-bold text-white">Upload Sales Call</h1>
-        <p className="text-surface-400 mt-1">Upload an audio recording for AI-powered analysis</p>
+        <h1 className="text-3xl font-extrabold text-dashboard-text-main tracking-tight">Upload Sales Call</h1>
+        <p className="text-dashboard-text-sub font-medium mt-1">Upload an audio recording for AI-powered analysis</p>
       </div>
 
       {/* Upload Area */}
@@ -113,12 +113,12 @@ export default function Upload() {
           >
             <div
               {...getRootProps()}
-              className={`relative border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 ${
+              className={`relative border-2 border-dashed rounded-[32px] p-12 text-center cursor-pointer transition-all duration-300 ${
                 isDragActive
-                  ? 'border-primary-400 bg-primary-500/5'
+                  ? 'border-dashboard-primary bg-dashboard-primary-light'
                   : file
                   ? 'border-accent-500/50 bg-accent-500/5'
-                  : 'border-surface-700 hover:border-surface-600 bg-surface-900/40'
+                  : 'border-dashboard-border hover:border-dashboard-primary/30 bg-dashboard-card shadow-sm'
               }`}
             >
               <input {...getInputProps()} id="audio-upload-input" />
@@ -138,7 +138,7 @@ export default function Upload() {
                       }`}
                     />
                   </div>
-                  <p className="text-surface-200 font-medium mb-1">
+                  <p className="text-dashboard-text-main font-bold mb-1 text-lg">
                     {isDragActive ? 'Drop your audio file here' : 'Drag & drop your audio file'}
                   </p>
                   <p className="text-surface-500 text-sm mb-4">or click to browse files</p>
@@ -152,8 +152,8 @@ export default function Upload() {
                     <FileAudio className="w-6 h-6 text-accent-400" />
                   </div>
                   <div className="text-left">
-                    <p className="text-surface-200 font-medium truncate max-w-xs">{file.name}</p>
-                    <p className="text-sm text-surface-500">{formatSize(file.size)}</p>
+                    <p className="text-dashboard-text-main font-bold truncate max-w-xs">{file.name}</p>
+                    <p className="text-sm text-dashboard-text-sub font-medium">{formatSize(file.size)}</p>
                   </div>
                   <button
                     onClick={(e) => {
@@ -186,15 +186,15 @@ export default function Upload() {
             key="processing"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-surface-900/60 backdrop-blur border border-surface-800 rounded-2xl p-8"
+            className="bg-dashboard-card border border-dashboard-border rounded-[40px] p-10 shadow-sm"
           >
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-xl bg-primary-500/15 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-primary-400 animate-pulse" />
+            <div className="flex items-center gap-4 mb-10">
+              <div className="w-12 h-12 rounded-xl bg-dashboard-primary-light flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-dashboard-primary animate-pulse" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">Analyzing your call</h3>
-                <p className="text-sm text-surface-400">This may take a minute...</p>
+                <h3 className="text-xl font-extrabold text-dashboard-text-main leading-tight">Analyzing your call</h3>
+                <p className="text-sm font-medium text-dashboard-text-sub">This may take a minute...</p>
               </div>
             </div>
 
@@ -214,8 +214,8 @@ export default function Upload() {
                     <div className="w-5 h-5 rounded-full border border-surface-700 flex-shrink-0" />
                   )}
                   <span
-                    className={`text-sm ${
-                      i <= currentStage ? 'text-surface-200' : 'text-surface-600'
+                    className={`text-sm font-bold ${
+                      i <= currentStage ? 'text-dashboard-text-main' : 'text-dashboard-text-sub opacity-50'
                     }`}
                   >
                     {stage.label}
@@ -225,7 +225,7 @@ export default function Upload() {
             </div>
 
             {/* Progress bar */}
-            <div className="mt-8 h-1.5 bg-surface-800 rounded-full overflow-hidden">
+            <div className="mt-10 h-2 bg-dashboard-bg rounded-full overflow-hidden">
               <motion.div
                 className="h-full bg-gradient-to-r from-primary-500 to-accent-400 rounded-full"
                 initial={{ width: '0%' }}
@@ -238,12 +238,12 @@ export default function Upload() {
       </AnimatePresence>
 
       {/* Tips */}
-      <div className="bg-surface-900/40 border border-surface-800 rounded-2xl p-6">
-        <h3 className="text-sm font-semibold text-surface-300 mb-3 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-primary-400" />
+      <div className="bg-dashboard-card border border-dashboard-border rounded-[32px] p-8 shadow-sm">
+        <h3 className="text-lg font-extrabold text-dashboard-text-main mb-4 flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-dashboard-primary" />
           Tips for best results
         </h3>
-        <ul className="space-y-2 text-sm text-surface-500">
+        <ul className="space-y-3 text-sm text-dashboard-text-sub font-medium">
           <li className="flex items-start gap-2">
             <span className="text-primary-400 mt-0.5">•</span>
             Use clear audio recordings with minimal background noise

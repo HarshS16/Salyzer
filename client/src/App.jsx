@@ -12,7 +12,8 @@ import Team from './pages/Team'
 import Landing from './pages/Landing'
 import PrivacyPolicy from './pages/PrivacyPolicy' // Added PrivacyPolicy
 import TermsOfService from './pages/TermsOfService' // Added TermsOfService
-import Support from './pages/Support' // Added Support
+import Support from './pages/Support' 
+import Profile from './pages/Profile' 
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -51,6 +52,7 @@ export default function App() {
         <Route path="/history" element={<CallHistory />} />
         <Route path="/scripts" element={<Scripts />} />
         <Route path="/team" element={<Team />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
 
       {/* Redirect all other to Home */}
